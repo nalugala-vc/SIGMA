@@ -3,6 +3,7 @@
 import { PrivyProvider } from '@privy-io/react-auth';
 import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
 import { createSolanaRpc, createSolanaRpcSubscriptions } from '@solana/kit';
+import SyncUser from '@/components/SyncUser';
 
 const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 const rpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL;
@@ -50,6 +51,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           : {}),
       }}
     >
+      <SyncUser />
       {children}
     </PrivyProvider>
   );

@@ -36,12 +36,13 @@ export async function fetchTopHolders(
   for (let i = 0; i < accounts.length; i++) {
     const account = accounts[i];
     const info = parsed.value[i];
-    const owner =
+    const ownerRaw =
       info?.data &&
       'parsed' in info.data &&
       info.data.parsed?.info?.owner
-        ? String(info.data.parsed.info.owner)
+        ? info.data.parsed.info.owner
         : account.address;
+    const owner = typeof ownerRaw === 'string' ? ownerRaw : ownerRaw.toBase58();
 
     const amount = account.uiAmount ?? 0;
     holders.push({

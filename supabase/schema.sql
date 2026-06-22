@@ -34,6 +34,21 @@ create index if not exists trades_token_mint_idx on public.trades (token_mint);
 create index if not exists trades_created_at_idx on public.trades (created_at desc);
 
 -- ---------------------------------------------------------------------------
+-- portfolio_snapshots: net worth history for profile chart
+-- ---------------------------------------------------------------------------
+create table if not exists public.portfolio_snapshots (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  total_usd numeric not null default 0,
+  sol_usd numeric not null default 0,
+  tokens_usd numeric not null default 0,
+  recorded_at timestamptz not null default now()
+);
+
+create index if not exists portfolio_snapshots_user_id_idx
+  on public.portfolio_snapshots (user_id, recorded_at desc);
+
+-- ---------------------------------------------------------------------------
 -- custom_tokens: user-created tokens + R2 logo URL
 -- ---------------------------------------------------------------------------
 create table if not exists public.custom_tokens (
@@ -76,6 +91,7 @@ create trigger profiles_set_updated_at
 alter table public.profiles enable row level security;
 alter table public.trades enable row level security;
 alter table public.custom_tokens enable row level security;
+alter table public.portfolio_snapshots enable row level security;
 
 -- Public read for custom token listings (trending / browse pages)
 create policy "Anyone can read custom tokens"

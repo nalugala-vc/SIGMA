@@ -103,15 +103,17 @@ export async function computePortfolio(
 
   holdings.sort((a, b) => b.valueUsd - a.valueUsd);
 
-  const symbolRes = await fetch(
-    `https://api.dexscreener.com/tokens/v1/solana/${holdings.map((h) => h.mint).join(',')}`,
-    { next: { revalidate: 300 } }
-  );
-  if (symbolRes.ok) {
-    const pairs: DexPair[] = await symbolRes.json();
-    for (const holding of holdings) {
-      const pair = pairs.find((p) => p.baseToken.address === holding.mint);
-      if (pair) holding.symbol = pair.baseToken.symbol;
+  if (holdings.length > 0) {
+    const symbolRes = await fetch(
+      `https://api.dexscreener.com/tokens/v1/solana/${holdings.map((h) => h.mint).join(',')}`,
+      { next: { revalidate: 300 } }
+    );
+    if (symbolRes.ok) {
+      const pairs: DexPair[] = await symbolRes.json();
+      for (const holding of holdings) {
+        const pair = pairs.find((p) => p.baseToken.address === holding.mint);
+        if (pair) holding.symbol = pair.baseToken.symbol;
+      }
     }
   }
 

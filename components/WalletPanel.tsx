@@ -2,6 +2,7 @@
 
 import FundWalletGuide from '@/components/FundWalletGuide';
 import { useSolanaWallet } from '@/hooks/useSolanaWallet';
+import { formatShortAddress } from '@/lib/format';
 import { useConnectWallet } from '@privy-io/react-auth';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -59,8 +60,8 @@ export default function WalletPanel() {
       </div>
 
       <div className="mb-3 flex items-center gap-2 rounded-lg bg-zinc-900 px-3 py-2">
-        <code className="min-w-0 flex-1 truncate text-xs text-zinc-300">
-          {wallet.address}
+        <code className="min-w-0 flex-1 font-mono text-xs text-zinc-300">
+          {formatShortAddress(wallet.address)}
         </code>
         <button
           type="button"

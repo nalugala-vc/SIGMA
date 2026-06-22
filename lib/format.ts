@@ -43,3 +43,24 @@ export function changeColorClass(change: number | null): string {
   if (change >= 0) return 'text-lime-400';
   return 'text-red-400';
 }
+
+export function formatShortAddress(address: string, chars = 4): string {
+  if (address.length <= chars * 2 + 1) return address;
+  return `${address.slice(0, chars)}…${address.slice(-chars)}`;
+}
+
+export function formatUsd(value: number | null): string {
+  if (value === null || !Number.isFinite(value)) return '—';
+  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(2)}M`;
+  if (value >= 1_000) return `$${(value / 1_000).toFixed(2)}K`;
+  if (value >= 1) return `$${value.toFixed(2)}`;
+  if (value >= 0.01) return `$${value.toFixed(4)}`;
+  return `$${value.toExponential(2)}`;
+}
+
+export function formatTokenAmount(value: number): string {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(2)}K`;
+  if (value >= 1) return value.toFixed(2);
+  return value.toExponential(2);
+}

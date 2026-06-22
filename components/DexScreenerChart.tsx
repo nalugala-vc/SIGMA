@@ -3,7 +3,7 @@ type DexScreenerChartProps = {
 };
 
 export default function DexScreenerChart({ pairAddress }: DexScreenerChartProps) {
-  const embedUrl = `https://dexscreener.com/solana/${pairAddress}?embed=1&theme=dark&trades=1&info=0`;
+  const embedUrl = `https://dexscreener.com/solana/${pairAddress}?embed=1&theme=dark&trades=0&info=0`;
 
   return (
     <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">

@@ -3,6 +3,7 @@
 import BuySellPanel from '@/components/BuySellPanel';
 import ClientTime from '@/components/ClientTime';
 import DexScreenerChart from '@/components/DexScreenerChart';
+import TokenActivityTabs from '@/components/TokenActivityTabs';
 import {
   changeColorClass,
   formatAge,
@@ -16,6 +17,26 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 
 const REFRESH_MS = 30_000;
+
+function CopyMintButton({ mint }: { mint: string }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    await navigator.clipboard.writeText(mint);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="rounded-lg border border-zinc-800 px-3 py-1.5 text-xs text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
+    >
+      {copied ? 'Copied!' : 'Copy mint address'}
+    </button>
+  );
+}
 
 function StatCard({
   label,
@@ -32,33 +53,6 @@ function StatCard({
       <p className={`mt-1 text-lg font-semibold tabular-nums ${valueClassName}`}>
         {value}
       </p>
-    </div>
-  );
-}
-
-function TxnRow({
-  label,
-  txns,
-}: {
-  label: string;
-  txns: { buys: number; sells: number } | null;
-}) {
-  if (!txns) {
-    return (
-      <div className="flex items-center justify-between py-2 text-sm text-zinc-500">
-        <span>{label}</span>
-        <span>—</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex items-center justify-between py-2 text-sm">
-      <span className="text-zinc-400">{label}</span>
-      <div className="flex gap-4 tabular-nums">
-        <span className="text-lime-400">{formatCount(txns.buys)} buys</span>
-        <span className="text-red-400">{formatCount(txns.sells)} sells</span>
-      </div>
     </div>
   );
 }
@@ -169,17 +163,15 @@ export default function TokenDetail({
         <p className="text-sm text-zinc-500">Chart unavailable for this token.</p>
       )}
 
-      <section className="rounded-xl border border-zinc-800 p-4">
-        <h2 className="mb-2 text-lg font-semibold">Recent activity</h2>
-        <p className="mb-3 text-xs text-zinc-500">
-          Buy/sell counts from DexScreener (live trades shown on chart above).
-        </p>
-        <TxnRow label="Last 5 minutes" txns={token.txnsM5} />
-        <TxnRow label="Last hour" txns={token.txnsH1} />
-        <TxnRow label="Last 24 hours" txns={token.txnsH24} />
-      </section>
+      <TokenActivityTabs
+        mint={mint}
+        pairAddress={token.pairAddress}
+        txnsM5={token.txnsM5}
+        txnsH1={token.txnsH1}
+        txnsH24={token.txnsH24}
+      />
 
-      <p className="break-all text-xs text-zinc-600">{token.mint}</p>
+      <CopyMintButton mint={mint} />
     </main>
   );
 }

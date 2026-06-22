@@ -2,28 +2,11 @@
 
 import TrendingList from '@/components/TrendingList';
 import WalletPanel from '@/components/WalletPanel';
-import { useSolanaWallet } from '@/hooks/useSolanaWallet';
 import { usePrivy } from '@privy-io/react-auth';
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 export default function Home() {
   const { ready, authenticated, user, login, logout } = usePrivy();
-  const { wallet } = useSolanaWallet();
-
-  useEffect(() => {
-    if (authenticated && user && wallet?.address) {
-      fetch('/api/sync-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          privyUserId: user.id,
-          email: user.email?.address || user.google?.email,
-          walletAddress: wallet.address,
-        }),
-      });
-    }
-  }, [authenticated, user, wallet?.address]);
 
   if (!ready) {
     return (

@@ -1,6 +1,8 @@
 'use client';
 
+import NetWorthChart from '@/components/NetWorthChart';
 import { useSolanaWallet } from '@/hooks/useSolanaWallet';
+import { formatCompactUsd, formatShortAddress } from '@/lib/format';
 import { usePrivy } from '@privy-io/react-auth';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
@@ -21,6 +23,21 @@ type Profile = {
   created_at: string;
 };
 
+type Portfolio = {
+  totalUsd: number;
+  solUsd: number;
+  tokensUsd: number;
+  solBalance: number;
+  holdings: { mint: string; symbol: string; amount: number; valueUsd: number }[];
+};
+
+type Snapshot = {
+  total_usd: number;
+  sol_usd: number;
+  tokens_usd: number;
+  recorded_at: string;
+};
+
 function formatTradeDate(iso: string) {
   return new Date(iso).toLocaleString();
 }
@@ -30,6 +47,8 @@ export default function ProfilePage() {
   const { wallet } = useSolanaWallet();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
+  const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,17 +58,32 @@ export default function ProfilePage() {
     setError(null);
 
     try {
-      const res = await fetch(`/api/trades?privyUserId=${encodeURIComponent(user.id)}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to load activity');
-      setProfile(data.profile);
-      setTrades(data.trades);
+      const tradesRes = await fetch(
+        `/api/trades?privyUserId=${encodeURIComponent(user.id)}`
+      );
+      const tradesData = await tradesRes.json();
+      if (!tradesRes.ok) throw new Error(tradesData.error || 'Failed to load activity');
+      setProfile(tradesData.profile);
+      setTrades(tradesData.trades);
+
+      const walletAddress =
+        wallet?.address || tradesData.profile?.wallet_address;
+      if (walletAddress) {
+        const portfolioRes = await fetch(
+          `/api/portfolio?wallet=${encodeURIComponent(walletAddress)}&privyUserId=${encodeURIComponent(user.id)}`
+        );
+        const portfolioData = await portfolioRes.json();
+        if (portfolioRes.ok) {
+          setPortfolio(portfolioData.portfolio);
+          setSnapshots(portfolioData.snapshots ?? []);
+        }
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load activity');
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, wallet?.address]);
 
   useEffect(() => {
     if (authenticated && user) loadActivity();
@@ -77,6 +111,9 @@ export default function ProfilePage() {
     );
   }
 
+  const walletDisplay =
+    wallet?.address || profile?.wallet_address || null;
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 bg-black px-4 py-8 text-white">
       <div className="flex items-center justify-between gap-4">
@@ -99,6 +136,66 @@ export default function ProfilePage() {
         </p>
       </header>
 
+      {portfolio && (
+        <>
+          <NetWorthChart
+            currentTotal={portfolio.totalUsd}
+            snapshots={snapshots}
+          />
+
+          <section className="rounded-xl border border-zinc-800 p-4">
+            <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-zinc-500">
+              Holdings
+            </h2>
+            <dl className="mb-4 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
+              <div>
+                <dt className="text-zinc-500">SOL</dt>
+                <dd className="font-medium tabular-nums">
+                  {portfolio.solBalance.toFixed(4)} · {formatCompactUsd(portfolio.solUsd)}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-zinc-500">Tokens</dt>
+                <dd className="font-medium tabular-nums">
+                  {formatCompactUsd(portfolio.tokensUsd)}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-zinc-500">Positions</dt>
+                <dd className="font-medium tabular-nums">
+                  {portfolio.holdings.length}
+                </dd>
+              </div>
+            </dl>
+
+            {portfolio.holdings.length > 0 ? (
+              <div className="space-y-2">
+                {portfolio.holdings.slice(0, 8).map((h) => (
+                  <div
+                    key={h.mint}
+                    className="flex items-center justify-between gap-3 text-sm"
+                  >
+                    <Link
+                      href={`/token/${h.mint}`}
+                      className="font-medium text-zinc-300 hover:text-white"
+                    >
+                      {h.symbol}
+                    </Link>
+                    <span className="tabular-nums text-zinc-400">
+                      {formatCompactUsd(h.valueUsd)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-zinc-500">
+                No token positions yet — only SOL in wallet.
+              </p>
+            )}
+          </section>
+        </>
+      )}
+
       <section className="rounded-xl border border-zinc-800 p-4">
         <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-zinc-500">
           Account
@@ -106,8 +203,8 @@ export default function ProfilePage() {
         <dl className="space-y-2 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-zinc-500">Wallet</dt>
-            <dd className="truncate font-mono text-xs text-zinc-300">
-              {wallet?.address || profile?.wallet_address || '—'}
+            <dd className="font-mono text-xs text-zinc-300">
+              {walletDisplay ? formatShortAddress(walletDisplay) : '—'}
             </dd>
           </div>
           <div className="flex justify-between gap-4">
