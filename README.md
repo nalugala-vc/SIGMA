@@ -129,7 +129,7 @@ Sign in with Phantom (or any Solana wallet), Google, or email. Privy provisions 
 ### 1. Clone and install
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/nalugala-vc/SIGMA
 cd sigma
 npm install
 ```
