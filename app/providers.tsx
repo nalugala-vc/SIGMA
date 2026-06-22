@@ -27,7 +27,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       config={{
         loginMethods: ['wallet', 'email', 'google', 'apple'],
         appearance: {
-          theme: 'dark',
+          theme: '#000000',
+          accentColor: '#f02bf2',
           walletChainType: 'solana-only',
           showWalletLoginFirst: true,
         },

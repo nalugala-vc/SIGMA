@@ -87,7 +87,7 @@ export default function HoldersList({
                       href={`https://solscan.io/account/${holder.owner}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-xs text-zinc-300 hover:text-lime-400"
+                      className="font-mono text-xs text-zinc-300 hover:text-sigma"
                     >
                       {formatShortAddress(holder.owner)}
                     </a>

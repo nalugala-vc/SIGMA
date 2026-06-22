@@ -154,7 +154,7 @@ export default function BuySellPanel({ mint, symbol }: BuySellPanelProps) {
             className={`flex-1 rounded-lg py-2 text-sm font-semibold capitalize ${
               side === tab
                 ? tab === 'buy'
-                  ? 'bg-lime-400 text-black'
+                  ? 'bg-sigma text-white'
                   : 'bg-red-500 text-white'
                 : 'border border-zinc-700 text-zinc-400'
             }`}
@@ -225,7 +225,7 @@ export default function BuySellPanel({ mint, symbol }: BuySellPanelProps) {
           disabled={status === 'loading' || !wallet}
           onClick={() => handleTrade(false)}
           className={`flex-1 rounded-lg py-3 font-bold disabled:opacity-50 ${
-            side === 'buy' ? 'bg-lime-400 text-black' : 'bg-red-500 text-white'
+            side === 'buy' ? 'bg-sigma text-white' : 'bg-red-500 text-white'
           }`}
         >
           {status === 'loading' ? 'Processing…' : side === 'buy' ? 'Buy' : 'Sell'}
@@ -245,7 +245,7 @@ export default function BuySellPanel({ mint, symbol }: BuySellPanelProps) {
       {message && (
         <p
           className={`mt-3 text-sm ${
-            status === 'success' ? 'text-lime-400' : 'text-red-400'
+            status === 'success' ? 'text-sigma' : 'text-red-400'
           }`}
         >
           {message}
@@ -257,7 +257,7 @@ export default function BuySellPanel({ mint, symbol }: BuySellPanelProps) {
           href={`https://solscan.io/tx/${txSignature}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-block text-sm text-lime-400 hover:underline"
+          className="mt-2 inline-block text-sm text-sigma hover:underline"
         >
           View on Solscan ↗
         </a>

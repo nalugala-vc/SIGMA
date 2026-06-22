@@ -1,6 +1,7 @@
 'use client';
 
 import NetWorthChart from '@/components/NetWorthChart';
+import SiteHeader from '@/components/SiteHeader';
 import { useSolanaWallet } from '@/hooks/useSolanaWallet';
 import { formatCompactUsd, formatShortAddress } from '@/lib/format';
 import { usePrivy } from '@privy-io/react-auth';
@@ -43,7 +44,7 @@ function formatTradeDate(iso: string) {
 }
 
 export default function ProfilePage() {
-  const { ready, authenticated, user, login } = usePrivy();
+  const { ready, authenticated, user, login, logout } = usePrivy();
   const { wallet } = useSolanaWallet();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -103,7 +104,7 @@ export default function ProfilePage() {
         <p className="text-zinc-400">Sign in to view your profile and activity.</p>
         <button
           onClick={login}
-          className="rounded-full bg-lime-400 px-6 py-3 font-bold text-black"
+          className="rounded-full bg-sigma px-6 py-3 font-bold text-white"
         >
           Sign in
         </button>
@@ -114,8 +115,18 @@ export default function ProfilePage() {
   const walletDisplay =
     wallet?.address || profile?.wallet_address || null;
 
+  const userLabel =
+    user?.email?.address || user?.google?.email || 'Connected wallet';
+
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 bg-black px-4 py-8 text-white">
+    <div className="flex min-h-full flex-1 flex-col bg-black text-white">
+      <SiteHeader
+        authenticated
+        userLabel={userLabel}
+        onSignOut={logout}
+      />
+
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-8 sm:px-8">
       <div className="flex items-center justify-between gap-4">
         <Link href="/" className="text-sm text-zinc-400 hover:text-white">
           ← Back to trending
@@ -262,7 +273,7 @@ export default function ProfilePage() {
                     <td className="px-3 py-3">
                       <span
                         className={
-                          trade.side === 'buy' ? 'text-lime-400' : 'text-red-400'
+                          trade.side === 'buy' ? 'text-sigma' : 'text-red-400'
                         }
                       >
                         {trade.side.toUpperCase()}
@@ -283,7 +294,7 @@ export default function ProfilePage() {
                           href={`https://solscan.io/tx/${trade.tx_signature}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-lime-400 hover:underline"
+                          className="text-sigma hover:underline"
                         >
                           View ↗
                         </a>
@@ -299,5 +310,6 @@ export default function ProfilePage() {
         )}
       </section>
     </main>
+    </div>
   );
 }

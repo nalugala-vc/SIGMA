@@ -40,7 +40,7 @@ export function formatAge(createdAtMs: number | null): string {
 
 export function changeColorClass(change: number | null): string {
   if (change === null) return 'text-zinc-500';
-  if (change >= 0) return 'text-lime-400';
+  if (change >= 0) return 'text-sigma';
   return 'text-red-400';
 }
 

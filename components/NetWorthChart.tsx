@@ -69,7 +69,7 @@ export default function NetWorthChart({
         {snapshots.length >= 2 && (
           <p
             className={`text-sm font-medium tabular-nums ${
-              change >= 0 ? 'text-lime-400' : 'text-red-400'
+              change >= 0 ? 'text-sigma' : 'text-red-400'
             }`}
           >
             {change >= 0 ? '+' : ''}
@@ -86,15 +86,15 @@ export default function NetWorthChart({
       >
         <defs>
           <linearGradient id="nw-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#a3e635" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#a3e635" stopOpacity="0" />
+            <stop offset="0%" stopColor="#f02bf2" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#f02bf2" stopOpacity="0" />
           </linearGradient>
         </defs>
         <polygon points={area} fill="url(#nw-fill)" />
         <polyline
           points={line}
           fill="none"
-          stroke="#a3e635"
+          stroke="#f02bf2"
           strokeWidth="2"
           strokeLinejoin="round"
           strokeLinecap="round"

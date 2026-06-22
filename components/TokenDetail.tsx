@@ -110,7 +110,7 @@ export default function TokenDetail({
             className="h-16 w-16 rounded-full bg-zinc-800 object-cover"
           />
         ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800 text-lg font-bold text-lime-400">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800 text-lg font-bold text-sigma">
             {token.symbol.slice(0, 2)}
           </div>
         )}

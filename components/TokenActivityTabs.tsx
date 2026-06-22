@@ -23,7 +23,7 @@ function TxnRow({ label, txns }: { label: string; txns: TxnWindow }) {
     <div className="flex items-center justify-between py-2 text-sm">
       <span className="text-zinc-400">{label}</span>
       <div className="flex gap-4 tabular-nums">
-        <span className="text-lime-400">{formatCount(txns.buys)} buys</span>
+        <span className="text-sigma">{formatCount(txns.buys)} buys</span>
         <span className="text-red-400">{formatCount(txns.sells)} sells</span>
       </div>
     </div>
@@ -91,7 +91,7 @@ export default function TokenActivityTabs({
               onClick={() => setTab(id)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors sm:px-4 ${
                 activeTab === id
-                  ? 'bg-lime-400 text-black'
+                  ? 'bg-sigma text-white'
                   : 'text-zinc-400 hover:text-white'
               }`}
             >

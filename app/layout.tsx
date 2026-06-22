@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sigma",
-  description: "Trade the outliers.",
+  title: 'SIGMA',
+  description: 'Trade the outliers.',
+  icons: { icon: '/icon.svg' },
 };
 
 export default function RootLayout({
@@ -28,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex h-full min-h-0 flex-col overflow-x-hidden">
         <Providers>{children}</Providers>
       </body>
     </html>

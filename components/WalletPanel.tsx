@@ -66,7 +66,7 @@ export default function WalletPanel() {
         <button
           type="button"
           onClick={copyAddress}
-          className="shrink-0 rounded-md bg-zinc-800 px-2 py-1 text-xs font-medium text-lime-400 hover:bg-zinc-700"
+          className="shrink-0 rounded-md bg-zinc-800 px-2 py-1 text-xs font-medium text-sigma hover:bg-zinc-700"
         >
           {copied ? 'Copied!' : 'Copy'}
         </button>

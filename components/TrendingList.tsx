@@ -129,7 +129,7 @@ export default function TrendingList() {
                           className="h-9 w-9 shrink-0 rounded-full bg-zinc-800 object-cover"
                         />
                       ) : (
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-xs font-bold text-lime-400">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-xs font-bold text-sigma">
                           {token.symbol.slice(0, 2)}
                         </div>
                       )}

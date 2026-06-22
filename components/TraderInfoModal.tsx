@@ -92,7 +92,7 @@ export default function TraderInfoModal({
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <span className="text-lime-400">(+) Sold:</span>
+                <span className="text-sigma">(+) Sold:</span>
                 <span className="text-zinc-300">
                   {formatCompactUsd(stats.soldUsd)}{' '}
                   <span className="text-zinc-500">
@@ -102,10 +102,10 @@ export default function TraderInfoModal({
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <span className="text-lime-400">(=) PNL:</span>
+                <span className="text-sigma">(=) PNL:</span>
                 <span
                   className={
-                    stats.pnlUsd >= 0 ? 'text-lime-400' : 'text-red-400'
+                    stats.pnlUsd >= 0 ? 'text-sigma' : 'text-red-400'
                   }
                 >
                   {formatCompactUsd(Math.abs(stats.pnlUsd))}
@@ -122,7 +122,7 @@ export default function TraderInfoModal({
                 </div>
                 <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-800">
                   <div
-                    className="h-full rounded-full bg-lime-400 transition-all"
+                    className="h-full rounded-full bg-sigma transition-all"
                     style={{ width: `${holdPct}%` }}
                   />
                 </div>

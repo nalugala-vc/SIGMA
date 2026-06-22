@@ -91,7 +91,7 @@ export default function LiveTrades({
                   <td className="px-3 py-2">
                     <span
                       className={
-                        trade.kind === 'buy' ? 'text-lime-400' : 'text-red-400'
+                        trade.kind === 'buy' ? 'text-sigma' : 'text-red-400'
                       }
                     >
                       {trade.kind.toUpperCase()}
@@ -107,7 +107,7 @@ export default function LiveTrades({
                     <button
                       type="button"
                       onClick={() => setSelectedTrader(trade.trader)}
-                      className="font-mono text-xs text-zinc-400 hover:text-lime-400"
+                      className="font-mono text-xs text-zinc-400 hover:text-sigma"
                     >
                       {formatShortAddress(trade.trader)}
                     </button>
