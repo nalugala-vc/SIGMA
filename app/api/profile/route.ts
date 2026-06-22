@@ -1,6 +1,9 @@
 import { createServerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
+const PROFILE_FIELDS =
+  'id, email, wallet_address, avatar_url, created_at, updated_at';
+
 export async function GET(req: NextRequest) {
   const privyUserId = req.nextUrl.searchParams.get('privyUserId');
 
@@ -10,26 +13,15 @@ export async function GET(req: NextRequest) {
 
   const supabase = createServerClient();
 
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile, error } = await supabase
     .from('profiles')
-    .select('id, email, wallet_address, avatar_url, created_at')
+    .select(PROFILE_FIELDS)
     .eq('privy_user_id', privyUserId)
     .single();
 
-  if (profileError || !profile) {
+  if (error || !profile) {
     return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
   }
 
-  const { data: trades, error: tradesError } = await supabase
-    .from('trades')
-    .select('*')
-    .eq('user_id', profile.id)
-    .order('created_at', { ascending: false })
-    .limit(50);
-
-  if (tradesError) {
-    return NextResponse.json({ error: tradesError.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ profile, trades: trades ?? [] });
+  return NextResponse.json({ profile });
 }

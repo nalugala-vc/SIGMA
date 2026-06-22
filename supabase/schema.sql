@@ -9,6 +9,7 @@ create table if not exists public.profiles (
   privy_user_id text unique not null,
   email text,
   wallet_address text,
+  avatar_url text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

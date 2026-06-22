@@ -2,19 +2,19 @@ export default function FundWalletGuide() {
   return (
     <ol className="list-decimal space-y-2 pl-4 text-sm text-zinc-400">
       <li>
-        Copy your wallet address below — this is where you receive SOL.
+        Scan the QR code or copy your wallet address — this is where you receive
+        SOL.
       </li>
       <li>
-        Buy SOL on an exchange (Coinbase, Kraken, Binance, etc.) or send from
-        another wallet like Phantom.
+        <strong className="text-zinc-300">Buy with card</strong> above, or send
+        SOL from Phantom / an exchange (Coinbase, Kraken, Binance, etc.).
       </li>
       <li>
-        Withdraw or send to the <strong className="text-zinc-300">Solana</strong>{' '}
-        network using your copied address.
+        Always use the <strong className="text-zinc-300">Solana</strong> network
+        when withdrawing.
       </li>
       <li>
-        Wait ~1 minute, then refresh — your balance will update and you can buy
-        tokens.
+        Wait ~1 minute, then refresh your balance — you can start trading.
       </li>
     </ol>
   );

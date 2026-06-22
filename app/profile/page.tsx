@@ -1,6 +1,7 @@
 'use client';
 
 import NetWorthChart from '@/components/NetWorthChart';
+import AvatarUpload from '@/components/AvatarUpload';
 import SiteHeader from '@/components/SiteHeader';
 import { useSolanaWallet } from '@/hooks/useSolanaWallet';
 import { formatCompactUsd, formatShortAddress } from '@/lib/format';
@@ -21,6 +22,7 @@ type Trade = {
 type Profile = {
   email: string | null;
   wallet_address: string | null;
+  avatar_url: string | null;
   created_at: string;
 };
 
@@ -122,6 +124,7 @@ export default function ProfilePage() {
     <div className="flex min-h-full flex-1 flex-col bg-black text-white">
       <SiteHeader
         authenticated
+        user={user}
         userLabel={userLabel}
         onSignOut={logout}
       />
@@ -140,11 +143,23 @@ export default function ProfilePage() {
         </button>
       </div>
 
-      <header>
-        <h1 className="text-2xl font-bold">Profile</h1>
-        <p className="mt-1 text-sm text-zinc-400">
-          {user?.email?.address || user?.google?.email || 'Connected wallet'}
-        </p>
+      <header className="space-y-4">
+        {user?.id && (
+          <AvatarUpload
+            privyUserId={user.id}
+            user={user}
+            userLabel={userLabel}
+            avatarUrl={profile?.avatar_url ?? null}
+            onUploaded={(url) => {
+              setProfile((p) => (p ? { ...p, avatar_url: url } : p));
+              window.dispatchEvent(new CustomEvent('sigma:profile-updated'));
+            }}
+          />
+        )}
+        <div>
+          <h1 className="text-2xl font-bold">Profile</h1>
+          <p className="mt-1 text-sm text-zinc-400">{userLabel}</p>
+        </div>
       </header>
 
       {portfolio && (

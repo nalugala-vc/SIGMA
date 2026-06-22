@@ -18,8 +18,13 @@ export default function SigmaLogo({
       >
         Σ
       </span>
-      <span className={`${labelSize} font-semibold tracking-tight text-white`}>
-        SIGMA
+      <span className="flex flex-col leading-none">
+        <span className={`${labelSize} font-semibold tracking-tight text-white`}>
+          SIGMA
+        </span>
+        <span className="mt-0.5 text-[10px] font-medium tracking-widest text-sigma/70 uppercase">
+          don&apos;t be mid
+        </span>
       </span>
     </Link>
   );

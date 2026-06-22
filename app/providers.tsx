@@ -4,6 +4,7 @@ import { PrivyProvider } from '@privy-io/react-auth';
 import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
 import { createSolanaRpc, createSolanaRpcSubscriptions } from '@solana/kit';
 import SyncUser from '@/components/SyncUser';
+import PrivyFundingPlugin from '@/components/PrivyFundingPlugin';
 
 const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 const rpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL;
@@ -35,6 +36,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         embeddedWallets: {
           solana: { createOnLogin: 'users-without-wallets' },
         },
+        fundingMethodConfig: {
+          moonpay: {
+            useSandbox: process.env.NODE_ENV === 'development',
+          },
+        },
         externalWallets: {
           solana: { connectors: toSolanaWalletConnectors() },
         },
@@ -52,6 +58,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           : {}),
       }}
     >
+      <PrivyFundingPlugin />
       <SyncUser />
       {children}
     </PrivyProvider>
