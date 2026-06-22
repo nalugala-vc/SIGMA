@@ -8,6 +8,7 @@ import {
   formatCount,
   formatPrice,
 } from '@/lib/format';
+import ClientTime from '@/components/ClientTime';
 import type { TrendingToken } from '@/lib/dexscreener';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
@@ -84,7 +85,7 @@ export default function TrendingList() {
         </p>
         {lastUpdated && (
           <p className="text-xs text-zinc-600">
-            Updated {lastUpdated.toLocaleTimeString()} · auto-refresh 30s
+            Updated <ClientTime date={lastUpdated} /> · auto-refresh 30s
           </p>
         )}
       </div>

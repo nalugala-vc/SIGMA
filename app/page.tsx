@@ -1,25 +1,29 @@
 'use client';
 
 import TrendingList from '@/components/TrendingList';
+import WalletPanel from '@/components/WalletPanel';
+import { useSolanaWallet } from '@/hooks/useSolanaWallet';
 import { usePrivy } from '@privy-io/react-auth';
+import Link from 'next/link';
 import { useEffect } from 'react';
 
 export default function Home() {
   const { ready, authenticated, user, login, logout } = usePrivy();
+  const { wallet } = useSolanaWallet();
 
   useEffect(() => {
-    if (authenticated && user) {
+    if (authenticated && user && wallet?.address) {
       fetch('/api/sync-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           privyUserId: user.id,
           email: user.email?.address || user.google?.email,
-          walletAddress: user.wallet?.address,
+          walletAddress: wallet.address,
         }),
       });
     }
-  }, [authenticated, user]);
+  }, [authenticated, user, wallet?.address]);
 
   if (!ready) {
     return (
@@ -34,7 +38,8 @@ export default function Home() {
       <main className="flex flex-1 flex-col items-center justify-center gap-6 bg-black px-4 text-white">
         <h1 className="text-3xl font-bold">SIGMA</h1>
         <p className="max-w-sm text-center text-zinc-400">
-          Trade trending memecoins on Solana.
+          Trade trending memecoins on Solana. Sign in with Google or connect
+          your existing wallet (Phantom, etc.).
         </p>
         <button
           onClick={login}
@@ -52,16 +57,26 @@ export default function Home() {
         <div>
           <h1 className="text-2xl font-bold">SIGMA</h1>
           <p className="mt-1 text-sm text-zinc-400">
-            {user?.email?.address || user?.google?.email}
+            {user?.email?.address || user?.google?.email || 'Connected wallet'}
           </p>
         </div>
-        <button
-          onClick={logout}
-          className="shrink-0 rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-900"
-        >
-          Log out
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/profile"
+            className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-900"
+          >
+            Profile
+          </Link>
+          <button
+            onClick={logout}
+            className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-900"
+          >
+            Log out
+          </button>
+        </div>
       </header>
+
+      <WalletPanel />
 
       <section>
         <h2 className="mb-3 text-lg font-semibold">Trending</h2>

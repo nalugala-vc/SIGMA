@@ -1,5 +1,7 @@
 'use client';
 
+import BuySellPanel from '@/components/BuySellPanel';
+import ClientTime from '@/components/ClientTime';
 import DexScreenerChart from '@/components/DexScreenerChart';
 import {
   changeColorClass,
@@ -69,7 +71,7 @@ export default function TokenDetail({
   initialToken: TokenDetailType;
 }) {
   const [token, setToken] = useState(initialToken);
-  const [lastUpdated, setLastUpdated] = useState<Date>(() => new Date());
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const refresh = useCallback(async () => {
     try {
@@ -84,6 +86,7 @@ export default function TokenDetail({
   }, [mint]);
 
   useEffect(() => {
+    setLastUpdated(new Date());
     const id = setInterval(refresh, REFRESH_MS);
     return () => clearInterval(id);
   }, [refresh]);
@@ -95,7 +98,13 @@ export default function TokenDetail({
           ← Back to trending
         </Link>
         <p className="text-xs text-zinc-500">
-          Updated {lastUpdated.toLocaleTimeString()} · refreshes every 30s
+          {lastUpdated ? (
+            <>
+              Updated <ClientTime date={lastUpdated} /> · refreshes every 30s
+            </>
+          ) : (
+            <>Refreshing every 30s</>
+          )}
         </p>
       </div>
 
@@ -148,6 +157,8 @@ export default function TokenDetail({
           valueClassName={changeColorClass(token.change6h)}
         />
       </div>
+
+      <BuySellPanel mint={mint} symbol={token.symbol} />
 
       {token.pairAddress ? (
         <section>

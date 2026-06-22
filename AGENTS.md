@@ -31,3 +31,6 @@ Show trade history from Supabase trades for the logged-in user.
 5. Custom tokens + R2 (if in scope)
 Create token flow + logo upload to R2 → save URL in custom_tokens.
 
+
+I suggested a lightweight social layer — a simple leaderboard or live trade feed showing what other users are buying. That was based on what fomo.family actually uses as its differentiator (their real features are leaderboards, a feed of top traders, and real-time alerts on what they're buying — not token creation, which doesn't exist on their platform at all).
+

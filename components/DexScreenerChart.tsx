@@ -10,7 +10,7 @@ export default function DexScreenerChart({ pairAddress }: DexScreenerChartProps)
       <iframe
         src={embedUrl}
         title="Price chart"
-        className="h-[420px] w-full border-0"
+        className="h-[600px] w-full border-0 sm:h-[680px]"
         allow="clipboard-write"
       />
     </div>
