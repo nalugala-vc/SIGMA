@@ -3,6 +3,7 @@
 import BuySellPanel from '@/components/BuySellPanel';
 import ClientTime from '@/components/ClientTime';
 import DexScreenerChart from '@/components/DexScreenerChart';
+import ScrollUnlock from '@/components/ScrollUnlock';
 import TokenActivityTabs from '@/components/TokenActivityTabs';
 import {
   changeColorClass,
@@ -87,6 +88,7 @@ export default function TokenDetail({
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 bg-black px-4 py-8 text-white">
+      <ScrollUnlock />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="text-sm text-zinc-400 hover:text-white">
           ← Back to trending

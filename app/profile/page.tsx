@@ -2,6 +2,7 @@
 
 import NetWorthChart from '@/components/NetWorthChart';
 import AvatarUpload from '@/components/AvatarUpload';
+import ScrollUnlock from '@/components/ScrollUnlock';
 import SiteHeader from '@/components/SiteHeader';
 import { useSolanaWallet } from '@/hooks/useSolanaWallet';
 import { formatCompactUsd, formatShortAddress } from '@/lib/format';
@@ -121,7 +122,8 @@ export default function ProfilePage() {
     user?.email?.address || user?.google?.email || 'Connected wallet';
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-black text-white">
+    <div className="flex min-h-dvh flex-col bg-black text-white">
+      <ScrollUnlock />
       <SiteHeader
         authenticated
         user={user}

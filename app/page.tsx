@@ -1,6 +1,7 @@
 'use client';
 
 import LandingHero from '@/components/LandingHero';
+import ScrollUnlock from '@/components/ScrollUnlock';
 import SiteHeader from '@/components/SiteHeader';
 import TrendingList from '@/components/TrendingList';
 import WalletPanel from '@/components/WalletPanel';
@@ -11,25 +12,22 @@ export default function Home() {
 
   if (!ready) {
     return (
-      <div className="flex flex-1 items-center justify-center bg-black text-white">
+      <div className="fixed inset-0 flex items-center justify-center bg-black">
         <div className="h-8 w-8 animate-pulse rounded-full border border-sigma/40 bg-sigma/10" />
       </div>
     );
   }
 
   if (!authenticated) {
-    return (
-      <div className="h-dvh max-h-dvh overflow-hidden bg-black">
-        <LandingHero onGetStarted={login} />
-      </div>
-    );
+    return <LandingHero onGetStarted={login} />;
   }
 
   const userLabel =
     user?.email?.address || user?.google?.email || 'Connected wallet';
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-black text-white">
+    <div className="flex min-h-dvh flex-col bg-black text-white">
+      <ScrollUnlock />
       <SiteHeader
         authenticated
         user={user}
