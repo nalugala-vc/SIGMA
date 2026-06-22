@@ -51,7 +51,7 @@ export default function LandingHero({ onGetStarted }: { onGetStarted: () => void
           </div>
 
           {/* Right: Lottie — contained, not full-height */}
-          <div className="hero-glow relative mx-auto w-full max-w-[440px] shrink-0 sm:max-w-[520px] lg:mx-0 lg:max-w-[600px]">
+          <div className="hero-glow relative mx-auto w-full max-w-[440px] shrink-0 -translate-y-4 sm:max-w-[520px] sm:-translate-y-6 lg:mx-0 lg:max-w-[600px] lg:-translate-y-8">
             <LandingLottie className="h-auto w-full" />
           </div>
         </main>

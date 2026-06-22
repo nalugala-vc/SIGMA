@@ -43,25 +43,12 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 function remapRgb(r: number, g: number, b: number): [number, number, number] {
   const [, s, l] = rgbToHsl(r, g, b);
 
-  // Achromatic (greys/whites/blacks) — push lights into dark purple, keep darks dark
-  if (s < 0.08) {
-    if (l > 0.75) {
-      // White → dark purple-grey
-      return hslToRgb(PINK_HUE, 0.25, 0.18);
-    }
-    if (l > 0.4) {
-      // Mid grey → medium-dark purple
-      return hslToRgb(PINK_HUE, 0.3, 0.12);
-    }
-    // Already dark → keep very dark
-    return hslToRgb(0, 0, Math.min(l, 0.08));
-  }
+  // Achromatic — keep exact lightness, skip hue shift
+  if (s < 0.08) return hslToRgb(0, 0, l);
 
-  // Chromatic: shift hue to PINK_HUE, cap lightness so nothing goes near white,
-  // scale saturation down ~30% to soften
+  // Chromatic: shift hue to PINK_HUE, scale saturation down ~30% to soften
   const sat = Math.min(s * 0.7, 0.75);
-  const lit = Math.min(l, 0.62); // clamp brightness — no near-whites
-  return hslToRgb(PINK_HUE, sat, lit);
+  return hslToRgb(PINK_HUE, sat, l);
 }
 
 function applyToColorK(k: unknown): unknown {
