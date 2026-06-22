@@ -9,28 +9,38 @@ const DEFAULT_URL = '/crypto-bitcoin.json';
 export default function LandingLottie({ className }: { className?: string }) {
   const [animationData, setAnimationData] = useState<object | null>(null);
 
-  const lottieUrl =
-    process.env.NEXT_PUBLIC_LOTTIE_URL?.trim() || DEFAULT_URL;
+  const remoteUrl = process.env.NEXT_PUBLIC_LOTTIE_URL?.trim();
 
   useEffect(() => {
     let cancelled = false;
 
+    async function loadFrom(url: string) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Failed to load animation from ${url}`);
+      return res.json();
+    }
+
     async function load() {
-      try {
-        const res = await fetch(lottieUrl);
-        if (!res.ok) throw new Error('Failed to load animation');
-        const raw = await res.json();
-        if (!cancelled) setAnimationData(applySigmaTheme(raw));
-      } catch {
-        if (!cancelled) setAnimationData(null);
+      const urls = remoteUrl ? [remoteUrl, DEFAULT_URL] : [DEFAULT_URL];
+
+      for (const url of urls) {
+        try {
+          const raw = await loadFrom(url);
+          if (!cancelled) setAnimationData(applySigmaTheme(raw));
+          return;
+        } catch {
+          // try next URL (e.g. remote R2 miss → bundled public file)
+        }
       }
+
+      if (!cancelled) setAnimationData(null);
     }
 
     load();
     return () => {
       cancelled = true;
     };
-  }, [lottieUrl]);
+  }, [remoteUrl]);
 
   if (!animationData) {
     return (

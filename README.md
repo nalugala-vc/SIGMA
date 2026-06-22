@@ -6,7 +6,8 @@
 
 <p align="center">
   <strong>Trade Solana's wildest memecoins.</strong><br />
-  <em>don't be mid</em>
+  <em>don't be mid</em><br />
+  <a href="https://sigma-opal-three.vercel.app/">sigma-opal-three.vercel.app</a>
 </p>
 
 <p align="center">
@@ -272,6 +273,8 @@ sigma/
 ---
 
 ## Deployment
+
+**Live app:** [https://sigma-opal-three.vercel.app](https://sigma-opal-three.vercel.app)
 
 ### Vercel (recommended)
 

@@ -1,5 +1,6 @@
 'use client';
 
+import DepositCryptoModal from '@/components/DepositCryptoModal';
 import { DEFAULT_TOKEN_DECIMALS, LAMPORTS_PER_SOL } from '@/lib/constants';
 import { useSolanaWallet } from '@/hooks/useSolanaWallet';
 import { usePrivy } from '@privy-io/react-auth';
@@ -34,19 +35,22 @@ export default function BuySellPanel({ mint, symbol }: BuySellPanelProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState<string | null>(null);
   const [txSignature, setTxSignature] = useState<string | null>(null);
+  const [showNoSolModal, setShowNoSolModal] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(false);
 
-  const loadBalances = useCallback(async () => {
-    if (!wallet?.address) return;
+  const loadBalances = useCallback(async (): Promise<number | null> => {
+    if (!wallet?.address) return null;
     const res = await fetch(
       `/api/wallet/balance?wallet=${wallet.address}&mint=${mint}`
     );
-    if (!res.ok) return;
+    if (!res.ok) return null;
     const data = await res.json();
     setSolBalance(data.solBalance);
     setTokenBalance(data.tokenBalance?.uiAmount ?? 0);
     if (data.tokenBalance?.decimals != null) {
       setTokenDecimals(data.tokenBalance.decimals);
     }
+    return data.solBalance as number;
   }, [wallet?.address, mint]);
 
   useEffect(() => {
@@ -57,6 +61,17 @@ export default function BuySellPanel({ mint, symbol }: BuySellPanelProps) {
     if (!wallet?.address || !user?.id) {
       setStatus('error');
       setMessage('Wallet not ready. Please wait a moment and try again.');
+      return;
+    }
+
+    const balance = solBalance ?? (await loadBalances());
+    if (balance === null) {
+      setStatus('error');
+      setMessage('Could not load wallet balance. Try again.');
+      return;
+    }
+    if (balance <= 0) {
+      setShowNoSolModal(true);
       return;
     }
 
@@ -267,6 +282,67 @@ export default function BuySellPanel({ mint, symbol }: BuySellPanelProps) {
         Swaps via Jupiter lite-api. You need SOL in your wallet for buys and
         transaction fees. Slippage: 1%.
       </p>
+
+      {showNoSolModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/80 p-4 sm:items-center"
+          onClick={() => setShowNoSolModal(false)}
+          role="presentation"
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-zinc-800 bg-black p-5 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="No SOL balance"
+          >
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-semibold text-white">No SOL in wallet</h3>
+                <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+                  You need SOL to pay network fees and to buy tokens. Add funds to
+                  your wallet before trading.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowNoSolModal(false)}
+                className="rounded-lg px-2 py-1 text-zinc-500 hover:text-white"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowNoSolModal(false);
+                  setShowDeposit(true);
+                }}
+                className="flex-1 rounded-full bg-sigma py-3 text-sm font-semibold text-white hover:bg-sigma-light"
+              >
+                Deposit SOL
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowNoSolModal(false)}
+                className="flex-1 rounded-full border border-zinc-700 py-3 text-sm font-semibold text-zinc-300 hover:bg-zinc-900"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeposit && wallet?.address && (
+        <DepositCryptoModal
+          address={wallet.address}
+          onClose={() => setShowDeposit(false)}
+          onFunded={loadBalances}
+        />
+      )}
     </section>
   );
 }
